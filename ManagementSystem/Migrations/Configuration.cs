@@ -38,6 +38,7 @@ namespace ManagementSystem.Migrations
                  {
                      Name = "Conan",
                      Date = DateTime.Parse("2000-1-11"),
+                     Role = "Student",
                      Class = "PG",
                      Age = 7.99M
                  },
@@ -46,6 +47,7 @@ namespace ManagementSystem.Migrations
                {
                    Name = "Ran",
                    Date = DateTime.Parse("2000-1-11"),
+                   Role = "Student",
                    Class = "PG",
                    Age = 17
                }
