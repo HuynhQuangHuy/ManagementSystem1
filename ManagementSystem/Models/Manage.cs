@@ -17,6 +17,7 @@ namespace ManagementSystem.Models
         public DateTime Date { get; set; }
         public string Role { get; set; }
         public decimal Age { get; set; }
+        public string Class { get; set; }
     }
     public class ManageDBContext : DbContext
     {

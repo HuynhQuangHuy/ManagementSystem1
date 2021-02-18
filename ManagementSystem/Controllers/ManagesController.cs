@@ -68,7 +68,7 @@ namespace ManagementSystem.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Date,Role,Age")] Manage manage)
+        public ActionResult Create([Bind(Include = "ID,Name,Date,Role,Age,Class")] Manage manage)
         {
             if (ModelState.IsValid)
             {
@@ -100,7 +100,7 @@ namespace ManagementSystem.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Date,Role,Age")] Manage manage)
+        public ActionResult Edit([Bind(Include = "ID,Name,Date,Role,Age,Class")] Manage manage)
         {
             if (ModelState.IsValid)
             {
