@@ -11,14 +11,16 @@ namespace ManagementSystem.Models
     {
         public int ID { get; set; }
 
-        [Required]
-        [StringLength(60, MinimumLength = 3)]
+        [Required(ErrorMessage = "Please enter name")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Please, use letters in the name. Digits are not allowed.")]
+        [StringLength(60, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 3)]
         public string Name { get; set; }
 
         [Required]
         [Display(Name = "Date")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Range(typeof(DateTime), "1/1/2021", "1/1/2050")]
         public DateTime Date { get; set; }
 
 
