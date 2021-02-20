@@ -7,15 +7,21 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ManagementSystem.Models;
+using Microsoft.AspNet.Identity;
 
 namespace ManagementSystem.Controllers
 {
     public class ManagesController : Controller
     {
         private ManageDBContext db = new ManageDBContext();
+        private ApplicationDbContext _context;
+        public ManagesController()
+        {
+            _context = new ApplicationDbContext();
+        }
 
         // GET: Manages
-        public ActionResult Index(string managerole, string searchString)
+        public ActionResult Index(string manageRole, string searchString)
         {
             var RoleLst = new List<string>();
 
@@ -24,7 +30,7 @@ namespace ManagementSystem.Controllers
                            select d.Role;
 
             RoleLst.AddRange(RoleQry.Distinct());
-            ViewBag.managerole = new SelectList(RoleLst);
+            ViewBag.manageRole = new SelectList(RoleLst);
 
             var manages = from m in db.Manages
                          select m;
@@ -34,9 +40,9 @@ namespace ManagementSystem.Controllers
                 manages = manages.Where(s => s.Name.Contains(searchString));
             }
 
-            if (!string.IsNullOrEmpty(managerole))
+            if (!string.IsNullOrEmpty(manageRole))
             {
-                manages = manages.Where(x => x.Role == managerole);
+                manages = manages.Where(x => x.Role == manageRole);
             }
 
             return View(manages);
@@ -58,6 +64,7 @@ namespace ManagementSystem.Controllers
         }
 
         // GET: Manages/Create
+        [Authorize] //Đã đăng nhập mới được tạo task
         public ActionResult Create()
         {
             return View();

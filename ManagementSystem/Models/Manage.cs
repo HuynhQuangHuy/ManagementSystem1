@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
@@ -20,7 +21,7 @@ namespace ManagementSystem.Models
         [Display(Name = "Date")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [Range(typeof(DateTime), "1/1/2021", "1/1/2050")]
+        
         public DateTime Date { get; set; }
 
 
@@ -39,9 +40,5 @@ namespace ManagementSystem.Models
         [Required]
         [StringLength(10)]
         public string Class { get; set; }
-    }
-    public class ManageDBContext : DbContext
-    {
-        public DbSet<Manage> Manages { get; set; }
     }
 }

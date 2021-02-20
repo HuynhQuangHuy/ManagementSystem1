@@ -7,13 +7,13 @@ namespace ManagementSystem.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class DataAnnotations : IMigrationMetadata
+    public sealed partial class addmigrationCreateManageTable : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(DataAnnotations));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(addmigrationCreateManageTable));
         
         string IMigrationMetadata.Id
         {
-            get { return "202102181706403_DataAnnotations"; }
+            get { return "202102200813307_add-migration CreateManageTable"; }
         }
         
         string IMigrationMetadata.Source
