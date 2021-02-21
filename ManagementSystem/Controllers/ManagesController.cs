@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ManagementSystem.Models;
+using ManagementSystem.ViewModels;
 using Microsoft.AspNet.Identity;
 
 namespace ManagementSystem.Controllers
@@ -83,12 +84,19 @@ namespace ManagementSystem.Controllers
 
         // GET: Manages/Create
         
-       
+        public ActionResult Create()
+        {
+            var viewModel = new ManageCategoriesViewModel()
+            {
+                Categories = db.Categories.ToList()
+            };
+            return View(viewModel);
+        }
 
         // POST: Manages/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Date,Role,Age,Class")] Manage manage)
+        public ActionResult Create([Bind(Include = "ID,Name,Date,Role,Age,Class,CategoryId")] Manage manage)
         {
             if (!ModelState.IsValid)
             {
@@ -100,6 +108,7 @@ namespace ManagementSystem.Controllers
             manageCreated.Role = manage.Role;
             manageCreated.Age = manage.Age;
             manageCreated.Class = manage.Class;
+            manageCreated.CategoryId = manage.CategoryId;
 
             db.Manages.Add(manageCreated);
             // Add to User table
@@ -118,11 +127,7 @@ namespace ManagementSystem.Controllers
 
             return RedirectToAction("Index");
         }
-         public ActionResult Create()
-        {
-            return View();
-           
-        }
+        
 
         // GET: Manages/Edit/5
         public ActionResult Edit(int? id)
