@@ -168,6 +168,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManagesController.cs" />
@@ -205,6 +206,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ManageCategoriesViewModel.cs" />
+    <Compile Include="ViewModels\UserWithRoleViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -267,6 +269,7 @@
     <Content Include="Views\Manages\Details.cshtml" />
     <Content Include="Views\Manages\Edit.cshtml" />
     <Content Include="Views\Manages\Index.cshtml" />
+    <Content Include="Views\Admins\Profiles.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

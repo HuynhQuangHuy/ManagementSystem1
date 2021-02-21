@@ -12,7 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace ManagementSystem.Controllers
 {
-     //Đã đăng nhập mới được tạo task, chỉ user mới được access
+    [Authorize] //Đã đăng nhập mới được tạo task, chỉ user mới được access
     public class ManagesController : Controller
     {
         private ManageDBContext db = new ManageDBContext();
@@ -62,6 +62,7 @@ namespace ManagementSystem.Controllers
         }
 
         // GET: Manages/Details/5
+        [Authorize(Roles = "user")]
         public ActionResult Details(int? id)
         {
             var currentUserId = User.Identity.GetUserId();
@@ -83,7 +84,7 @@ namespace ManagementSystem.Controllers
         }
 
         // GET: Manages/Create
-        
+        [Authorize(Roles = "user")]
         public ActionResult Create()
         {
             var viewModel = new ManageCategoriesViewModel()
@@ -92,7 +93,7 @@ namespace ManagementSystem.Controllers
             };
             return View(viewModel);
         }
-
+        [Authorize(Roles = "user")]
         // POST: Manages/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -127,56 +128,64 @@ namespace ManagementSystem.Controllers
 
             return RedirectToAction("Index");
         }
-        
 
+        [Authorize(Roles = "user")]
         // GET: Manages/Edit/5
-        public ActionResult Edit(int? id)
-        { 
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Manage manage = db.Manages.Find(id);
-            if (manage == null)
-            {
-                return HttpNotFound();
-            }
-            return View(manage);
-        }
-
-        // POST: Manages/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Date,Role,Age,Class")] Manage manage)
+        public ActionResult Edit(int id)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(manage).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
             var currentUserId = User.Identity.GetUserId();
 
             var todoUserInDb = db.User
-                .SingleOrDefault(t => t.UserId == currentUserId && t.ManageId== manage.ID);
+                .SingleOrDefault(t => t.UserId == currentUserId && t.ManageId == id);
 
             if (todoUserInDb == null) return HttpNotFound();
 
-            var manageInDb = db.Manages.SingleOrDefault(t => t.ID == manage.ID);
+            var viewModel = new ManageCategoriesViewModel()
+            {
+                Manage = db.Manages.SingleOrDefault(t => t.ID == id),
+                Categories = db.Categories.ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        // POST: Manages/Edit/5
+        [Authorize(Roles = "user")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ID,Name,Date,Role,Age,Class,CategoryId")] Manage manage)
+        {
+        if (!ModelState.IsValid)
+        {
+            var viewModel = new ManageCategoriesViewModel()
+            {
+                Manage = manage,
+                Categories = db.Categories.ToList()
+            };
+            return View(viewModel);
+        }
+
+        var currentUserId = User.Identity.GetUserId();
+
+        var todoUserInDb = db.User
+            .SingleOrDefault(t => t.UserId == currentUserId && t.ManageId == manage.ID);
+
+        if (todoUserInDb == null) return HttpNotFound();
+
+        var manageInDb = db.Manages.SingleOrDefault(t => t.ID == manage.ID);
 
             manageInDb.Name = manage.Name;
             manageInDb.Date = manage.Date;
+            manageInDb.Role = manage.Role;
             manageInDb.Age = manage.Age;
-            manageInDb.Role= manage.Role;
             manageInDb.Class = manage.Class;
+            manageInDb.CategoryId = manage.CategoryId;
 
             db.SaveChanges();
 
-            return RedirectToAction("Index");
-        }
-
+        return RedirectToAction("Index");
+    }
+        [Authorize(Roles = "user")]
         // GET: Manages/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -191,7 +200,7 @@ namespace ManagementSystem.Controllers
             }
             return View(manage);
         }
-
+        [Authorize(Roles = "user")]
         // POST: Manages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
