@@ -35,10 +35,13 @@ namespace ManagementSystem.Models
         
         public int Age { get; set; }
 
-        
-        
         [Required]
         [StringLength(10)]
         public string Class { get; set; }
+
+        [Required(ErrorMessage = ("Category must not be null"))]
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
+
     }
 }

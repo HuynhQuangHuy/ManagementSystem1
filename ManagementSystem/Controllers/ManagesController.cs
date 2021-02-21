@@ -11,15 +11,11 @@ using Microsoft.AspNet.Identity;
 
 namespace ManagementSystem.Controllers
 {
-    [Authorize] //Đã đăng nhập mới được tạo task
+     //Đã đăng nhập mới được tạo task, chỉ user mới được access
     public class ManagesController : Controller
     {
         private ManageDBContext db = new ManageDBContext();
-        private ManageDBContext _context;
-        public ManagesController()
-        {
-            _context = new ManageDBContext();
-        }
+        
 
         // GET: Manages
         public ActionResult Index(string manageRole, string searchString)
@@ -34,7 +30,7 @@ namespace ManagementSystem.Controllers
           var manages = db.User
                 .Where(t => t.UserId == currentUserId)
                     .Select(t => t.Manage)
-               
+                    .Include(t => t.Category)
                     .ToList();
 
             RoleLst.AddRange(RoleQry.Distinct());
@@ -42,10 +38,11 @@ namespace ManagementSystem.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                manages = db.User
+                 manages = db.User
                 .Where(t => t.UserId == currentUserId)
                 .Select(t => t.Manage)
                 .Where(t => t.Name.Contains(searchString))
+                .Include(t => t.Category)
                 .ToList();
                 
             }
@@ -56,6 +53,7 @@ namespace ManagementSystem.Controllers
               .Where(t => t.UserId == currentUserId)
               .Select(t => t.Manage)
               .Where(t => t.Name.Contains(searchString))
+              .Include(t => t.Category)
               .ToList();
             }
 
@@ -66,11 +64,11 @@ namespace ManagementSystem.Controllers
         public ActionResult Details(int? id)
         {
             var currentUserId = User.Identity.GetUserId();
-            //var manages = _context.user
-            //    .where(t => t.manageid == id && t.userid == currentuserid)
-            //    .select(t => t.manage)
-
-            //    .firstordefault();
+            var manages = db.User
+               .Where(t => t.ManageId == id && t.UserId == currentUserId)
+                   .Select(t => t.Manage)
+                   .Include(t => t.Category)
+                   .FirstOrDefault();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -128,7 +126,7 @@ namespace ManagementSystem.Controllers
 
         // GET: Manages/Edit/5
         public ActionResult Edit(int? id)
-        {
+        { 
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -154,9 +152,24 @@ namespace ManagementSystem.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            var currentUserId = User.Identity.GetUserId();
 
-           
-            return View(manage);
+            var todoUserInDb = db.User
+                .SingleOrDefault(t => t.UserId == currentUserId && t.ManageId== manage.ID);
+
+            if (todoUserInDb == null) return HttpNotFound();
+
+            var manageInDb = db.Manages.SingleOrDefault(t => t.ID == manage.ID);
+
+            manageInDb.Name = manage.Name;
+            manageInDb.Date = manage.Date;
+            manageInDb.Age = manage.Age;
+            manageInDb.Role= manage.Role;
+            manageInDb.Class = manage.Class;
+
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         // GET: Manages/Delete/5

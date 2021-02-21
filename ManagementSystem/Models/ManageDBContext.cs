@@ -15,7 +15,7 @@ namespace ManagementSystem.Models
         }
         public DbSet<Manage> Manages { get; set; }
         public DbSet<ManageUser> User { get; set; }
-
+        public DbSet<Category> Categories { get; set; }
     }
     
 }
