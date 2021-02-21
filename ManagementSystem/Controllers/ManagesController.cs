@@ -11,38 +11,52 @@ using Microsoft.AspNet.Identity;
 
 namespace ManagementSystem.Controllers
 {
+    [Authorize] //Đã đăng nhập mới được tạo task
     public class ManagesController : Controller
     {
         private ManageDBContext db = new ManageDBContext();
-        private ApplicationDbContext _context;
+        private ManageDBContext _context;
         public ManagesController()
         {
-            _context = new ApplicationDbContext();
+            _context = new ManageDBContext();
         }
 
         // GET: Manages
         public ActionResult Index(string manageRole, string searchString)
         {
+            var currentUserId = User.Identity.GetUserId();
+
             var RoleLst = new List<string>();
 
             var RoleQry = from d in db.Manages
                            orderby d.Role
                            select d.Role;
+          var manages = db.User
+                .Where(t => t.UserId == currentUserId)
+                    .Select(t => t.Manage)
+               
+                    .ToList();
 
             RoleLst.AddRange(RoleQry.Distinct());
             ViewBag.manageRole = new SelectList(RoleLst);
 
-            var manages = from m in db.Manages
-                         select m;
-
             if (!String.IsNullOrEmpty(searchString))
             {
-                manages = manages.Where(s => s.Name.Contains(searchString));
+                manages = db.User
+                .Where(t => t.UserId == currentUserId)
+                .Select(t => t.Manage)
+                .Where(t => t.Name.Contains(searchString))
+                .ToList();
+                
             }
 
             if (!string.IsNullOrEmpty(manageRole))
             {
-                manages = manages.Where(x => x.Role == manageRole);
+                manages = db.User
+              .Where(t => t.UserId == currentUserId)
+              .Select(t => t.Manage)
+              .Where(t => t.Name.Contains(searchString))
+              .ToList();
             }
 
             return View(manages);
@@ -51,6 +65,12 @@ namespace ManagementSystem.Controllers
         // GET: Manages/Details/5
         public ActionResult Details(int? id)
         {
+            var currentUserId = User.Identity.GetUserId();
+            //var manages = _context.user
+            //    .where(t => t.manageid == id && t.userid == currentuserid)
+            //    .select(t => t.manage)
+
+            //    .firstordefault();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -64,27 +84,46 @@ namespace ManagementSystem.Controllers
         }
 
         // GET: Manages/Create
-        [Authorize] //Đã đăng nhập mới được tạo task
-        public ActionResult Create()
-        {
-            return View();
-        }
+        
+       
 
         // POST: Manages/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Name,Date,Role,Age,Class")] Manage manage)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                db.Manages.Add(manage);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return View();
             }
+            var manageCreated = new Manage();
+            manageCreated.Name = manage.Name;
+            manageCreated.Date = manage.Date;
+            manageCreated.Role = manage.Role;
+            manageCreated.Age = manage.Age;
+            manageCreated.Class = manage.Class;
 
-            return View(manage);
+            db.Manages.Add(manageCreated);
+            // Add to User table
+            var currentUserId = User.Identity.GetUserId();
+
+            var manageUser = new ManageUser()
+            {
+                ManageId = manageCreated.ID,
+                UserId = currentUserId
+            };
+
+            db.User.Add(manageUser);
+
+            db.SaveChanges();
+
+
+            return RedirectToAction("Index");
+        }
+         public ActionResult Create()
+        {
+            return View();
+           
         }
 
         // GET: Manages/Edit/5
@@ -115,6 +154,8 @@ namespace ManagementSystem.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
+           
             return View(manage);
         }
 

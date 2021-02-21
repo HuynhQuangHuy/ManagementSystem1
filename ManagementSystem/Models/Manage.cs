@@ -32,11 +32,11 @@ namespace ManagementSystem.Models
 
         [Required]
         [Range(1, 70)]
-        [DataType(DataType.Currency)]
-        public decimal Age { get; set; }
+        
+        public int Age { get; set; }
 
         
-        [RegularExpression(@"^[A-Z]+[a-zA-Z'\s]*$")]
+        
         [Required]
         [StringLength(10)]
         public string Class { get; set; }
