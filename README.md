@@ -1,2 +1,2 @@
-Admin
-Abc@@123
+User: Admin
+Pwd: Abc@@123
