@@ -1,0 +1,32 @@
+﻿@model IEnumerable<ManagementSystem.ViewModels.UserWithRoleViewModel>
+@{
+    ViewBag.Title = "Profiless";
+}
+
+<h2>Index</h2>
+
+
+<table class="table table-striped">
+    <tr>
+        <th>UserName</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Delete</th>
+        <th>Edit User Name</th>
+        <th>Reset Password to 123456</th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            @if ((user.Role.Contains("Trainee") || user.Role.Contains("Admin")) == false) //Admin manage TrainingStaff and Trainer
+            {
+                <td>@user.Username</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td>
+                <td>@Html.ActionLink("Delete this account", "Delete", new { id = user.UserId })</td>
+                <td>@Html.ActionLink("Edit user name", "Edit", new { id = user.UserId })</td>
+                <td>@Html.ActionLink("Reset Password", "ChangePass", new { id = user.UserId })</td>
+ }
+        </tr>
+}
+</table>

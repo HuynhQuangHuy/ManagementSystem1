@@ -12,7 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace ManagementSystem.Controllers
 {
-    [Authorize] //Đã đăng nhập mới được tạo task, chỉ user mới được access
+    [Authorize(Roles = "Trainee")] //Đã đăng nhập mới được tạo task, chỉ user mới được access
     public class ManagesController : Controller
     {
         private ManageDBContext db = new ManageDBContext();
@@ -62,7 +62,7 @@ namespace ManagementSystem.Controllers
         }
 
         // GET: Manages/Details/5
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "Trainee")]
         public ActionResult Details(int? id)
         {
             var currentUserId = User.Identity.GetUserId();
@@ -84,7 +84,7 @@ namespace ManagementSystem.Controllers
         }
 
         // GET: Manages/Create
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "Trainee")]
         public ActionResult Create()
         {
             var viewModel = new ManageCategoriesViewModel()
@@ -93,7 +93,7 @@ namespace ManagementSystem.Controllers
             };
             return View(viewModel);
         }
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "Trainee")]
         // POST: Manages/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -129,7 +129,7 @@ namespace ManagementSystem.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "Trainee")]
         // GET: Manages/Edit/5
         public ActionResult Edit(int id)
         {
@@ -150,7 +150,7 @@ namespace ManagementSystem.Controllers
         }
 
         // POST: Manages/Edit/5
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "Trainee")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Name,Date,Role,Age,Class,CategoryId")] Manage manage)
@@ -185,7 +185,7 @@ namespace ManagementSystem.Controllers
 
         return RedirectToAction("Index");
     }
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "Trainee")]
         // GET: Manages/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -200,7 +200,7 @@ namespace ManagementSystem.Controllers
             }
             return View(manage);
         }
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "Trainee")]
         // POST: Manages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

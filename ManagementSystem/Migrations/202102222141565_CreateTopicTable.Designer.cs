@@ -7,13 +7,13 @@ namespace ManagementSystem.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddCategoryFKToTodoModel : IMigrationMetadata
+    public sealed partial class CreateTopicTable : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddCategoryFKToTodoModel));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(CreateTopicTable));
         
         string IMigrationMetadata.Id
         {
-            get { return "202102210919280_AddCategoryFKToTodoModel"; }
+            get { return "202102222141565_CreateTopicTable"; }
         }
         
         string IMigrationMetadata.Source

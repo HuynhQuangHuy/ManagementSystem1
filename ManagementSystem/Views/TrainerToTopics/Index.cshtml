@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ManagementSystem.Models.TrainerToTopic>
+@{ ViewBag.Title = "Index"; }
+
+<h2>Manage Trainer</h2>
+
+@using (Html.BeginForm("Index", "TrainerToTopics", FormMethod.Get))
+{
+<p>
+    <input type="search" class="form-control" placeholder="Enter Trainer Email or UserName"
+           name="searchTrainer" style="width:238px; height:33px; display:inline-block;" />
+
+    <input type="submit" value="Search" class="btn btn-info" />
+
+    <a class="btn btn-info" href="~/TrainerToTopics/Index" role="button">
+        View all Trainers
+    </a>
+</p>}
+
+@if (Request.IsAuthenticated && User.IsInRole("TrainingStaff"))
+{
+<div>
+    <a class="btn btn-info" href="~/TrainerToTopics/Create" style="margin-bottom:10px;" role="button">
+        Assign Trainer to Topic
+    </a>
+</div>}
+
+<table class="table table-striped">
+    <tr>
+        <th>Id</th>
+        <th>Trainer Email</th>
+        <th>Trainer UserName</th>
+        <th>Topic Name</th>
+        @if (Request.IsAuthenticated && User.IsInRole("TrainingStaff"))
+        {
+<th>Delete</th>}
+
+    </tr>
+    @foreach (var trainer in Model)
+    {
+<tr>
+    <th>@trainer.Id</th>
+    <th>@trainer.Trainer.Email</th>
+    <th>@trainer.Trainer.UserName</th>
+    <th>@trainer.Topic.Name</th>
+    @if (Request.IsAuthenticated && User.IsInRole("TrainingStaff"))
+    {
+<th>@Html.ActionLink("Delete", "Delete", new { id = trainer.Id })</th>}
+</tr>}
+</table>
