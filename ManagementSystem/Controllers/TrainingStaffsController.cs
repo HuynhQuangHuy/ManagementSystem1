@@ -10,18 +10,18 @@ namespace ManagementSystem.Controllers
 {
 	public class TrainingStaffsController : Controller
 	{
-		private ManageDBContext _context;
+		private ManageDBContext db;
 
 		public TrainingStaffsController()
 		{
-			_context = new ManageDBContext();
+			db = new ManageDBContext();
 		}
 
 		[Authorize(Roles = "TrainingStaff")]
 		public ActionResult Index()
 		{
 			//Láy giá trị từ bẳng AspNetUser và liên kết với bảng AspnetRole thông qua bảng AspNetUserRole
-			var UserInfor = (from user in _context.Users
+			var UserInfor = (from user in db.Users
 							 select new
 							 /*FROM-IN: xác định nguồn dữ liệu truy vấn (Users). 
                              Nguồn dữ liệu tập hợp những phần tử thuộc kiểu lớp triển khai giao diện IEnumrable*/
@@ -32,7 +32,7 @@ namespace ManagementSystem.Controllers
 								 Emailaddress = user.Email,
 								 RoleName = (from userRole in user.Roles
 												 //JOIN kết hợp 2 trường dữ liệu tương ứng
-											 join role in _context.Roles //JOIN-IN: chỉ ra nguồn kết nối vs nguồn của FROM   
+											 join role in db.Roles //JOIN-IN: chỉ ra nguồn kết nối vs nguồn của FROM   
 											 on userRole.RoleId          //ON: chỉ ra sự ràng buộc giữa các phần tử  
 											 equals role.Id              //EQUALS: chỉ ra căn cứ vs ràng buộc (userRole.RoleId ~~ role.Id)
 											 select role.Name).ToList()
@@ -54,31 +54,22 @@ namespace ManagementSystem.Controllers
 			return View(UserWithRole);
 		}
 
-		/*.
-		*//*SHOW ACCOUNT*//*
-		[Authorize(Roles = "Admin")]
-		[HttpGet]
-		public ActionResult Index()
-		{
-			var Account = _context.Users.ToList();
-			return View(Account);
-		}
-        .*/
+
 
 		//DELETE ACCOUNT
 		[HttpGet]
 		[Authorize(Roles = "TrainingStaff")]
 		public ActionResult Delete(string id)
 		{
-			var AccountInDB = _context.Users.SingleOrDefault(p => p.Id == id);
+			var AccountInDB = db.Users.SingleOrDefault(p => p.Id == id);
 
 			if (AccountInDB == null)
 			{
 				return HttpNotFound();
 			}
 
-			_context.Users.Remove(AccountInDB);
-			_context.SaveChanges();
+			db.Users.Remove(AccountInDB);
+			db.SaveChanges();
 			return RedirectToAction("Index");
 		}
 
@@ -87,7 +78,7 @@ namespace ManagementSystem.Controllers
 		[Authorize(Roles = "TrainingStaff")]
 		public ActionResult Edit(string id)
 		{
-			var AccountInDB = _context.Users.SingleOrDefault(p => p.Id == id);
+			var AccountInDB = db.Users.SingleOrDefault(p => p.Id == id);
 			if (AccountInDB == null)
 			{
 				return HttpNotFound();
@@ -104,7 +95,7 @@ namespace ManagementSystem.Controllers
 			{
 				return View();
 			}
-			var UsernameIsExist = _context.Users.
+			var UsernameIsExist = db.Users.
 								  Any(p => p.UserName.Contains(user.UserName));
 
 			if (UsernameIsExist)
@@ -113,7 +104,7 @@ namespace ManagementSystem.Controllers
 				return View();
 			}
 
-			var AccountInDB = _context.Users.SingleOrDefault(p => p.Id == user.Id);
+			var AccountInDB = db.Users.SingleOrDefault(p => p.Id == user.Id);
 
 			if (AccountInDB == null)
 			{
@@ -123,18 +114,8 @@ namespace ManagementSystem.Controllers
 			AccountInDB.UserName = user.UserName;
 
 
-			/*.
-            var userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
-            userId = user.Id;
-            if (userId != null)
-            {
-                UserManager<IdentityUser> userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>());
-                userManager.RemovePassword(userId);
-                String newPassword = user.PhoneNumber;
-                userManager.AddPassword(userId, newPassword);
-            }
-            .*/
-			_context.SaveChanges();
+
+			db.SaveChanges();
 			return RedirectToAction("Index");
 		}
 
@@ -144,7 +125,7 @@ namespace ManagementSystem.Controllers
 		[Authorize(Roles = "TrainingStaff")]
 		public ActionResult ChangePass(string id)
 		{
-			var AccountInDB = _context.Users.SingleOrDefault(p => p.Id == id);
+			var AccountInDB = db.Users.SingleOrDefault(p => p.Id == id);
 
 			if (AccountInDB == null)
 			{
@@ -164,7 +145,7 @@ namespace ManagementSystem.Controllers
 				String newPassword = "123456";
 				userManager.AddPassword(userId, newPassword);
 			}
-			_context.SaveChanges();
+			db.SaveChanges();
 			return RedirectToAction("Index");
 		}
 	}

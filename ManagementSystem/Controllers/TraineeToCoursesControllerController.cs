@@ -10,10 +10,10 @@ namespace ManagementSystem.Controllers
 {
 	public class TraineeToCoursesController : Controller
 	{
-		private ManageDBContext _context;
+		private ManageDBContext db;
 		public TraineeToCoursesController()
 		{
-			_context = new ManageDBContext();
+			db = new ManageDBContext();
 		}
 
 		[HttpGet]
@@ -21,7 +21,7 @@ namespace ManagementSystem.Controllers
 		// GET: TraineeToCourses
 		public ActionResult Index(string searchTrainee)
 		{
-			var traineetocourses = _context.TraineeToCourses
+			var traineetocourses = db.TraineeToCourses
 								   .Include(tr => tr.Course)
 								   .Include(tr => tr.Trainee);
 
@@ -40,14 +40,14 @@ namespace ManagementSystem.Controllers
 		public ActionResult Create()
 		{
 			//Get Account Trainee
-			var roleInDb = (from r in _context.Roles where r.Name.Contains("Trainee") select r)
+			var roleInDb = (from r in db.Roles where r.Name.Contains("Trainee") select r)
 									 .FirstOrDefault();
 
-			var users = _context.Users.Where(x => x.Roles.Select(y => y.RoleId)
+			var users = db.Users.Where(x => x.Roles.Select(y => y.RoleId)
 														 .Contains(roleInDb.Id))
 														 .ToList();
 			//Get Course
-			var courses = _context.Courses.ToList();
+			var courses = db.Courses.ToList();
 
 			var viewModel = new TraineeToCourseViewModel
 			{
@@ -67,14 +67,14 @@ namespace ManagementSystem.Controllers
 
 			if (!ModelState.IsValid)
 			{
-				return View("~/Views/CheckTraineeToCourseConditions/AssignNullTraineeCourse.cshtml");
+				return View("~/Views/TraineeToCourseConditions/AssignNullTraineeCourse.cshtml");
 			}
 
 			//Check if Trainee Name or Course Name existed or not
-			if (_context.TraineeToCourses.Any(c => c.TraineeId == traineeToCourse.TraineeId &&
+			if (db.TraineeToCourses.Any(c => c.TraineeId == traineeToCourse.TraineeId &&
 												   c.CourseId == traineeToCourse.CourseId))
 			{
-				return View("~/Views/CheckTraineeToCourseConditions/AssignExistTraineeCourse.cshtml");
+				return View("~/Views/TraineeToCourseConditions/AssignExistTraineeCourse.cshtml");
 			}
 
 			var newTraineeToCourse = new TraineeToCourse
@@ -83,23 +83,23 @@ namespace ManagementSystem.Controllers
 				CourseId = traineeToCourse.CourseId
 			};
 
-			_context.TraineeToCourses.Add(newTraineeToCourse);
-			_context.SaveChanges();
-			return View("~/Views/CheckTraineeToCourseConditions/AssignTraineeCourseSuccess.cshtml");
+			db.TraineeToCourses.Add(newTraineeToCourse);
+			db.SaveChanges();
+			return View("~/Views/TraineeToCourseConditions/AssignTraineeCourseSuccess.cshtml");
 		}
 
 		[HttpGet]
 		[Authorize(Roles = "TrainingStaff")]
 		public ActionResult Delete(int id)
 		{
-			var traineeInDb = _context.TraineeToCourses.SingleOrDefault(trdb => trdb.Id == id);
+			var traineeInDb = db.TraineeToCourses.SingleOrDefault(trdb => trdb.Id == id);
 			if (traineeInDb == null)
 			{
 				return HttpNotFound();
 			}
 
-			_context.TraineeToCourses.Remove(traineeInDb);
-			_context.SaveChanges();
+			db.TraineeToCourses.Remove(traineeInDb);
+			db.SaveChanges();
 			return RedirectToAction("Index");
 		}
 
@@ -110,7 +110,7 @@ namespace ManagementSystem.Controllers
 		{
 			var userId = User.Identity.GetUserId();
 
-			var traineeToCourses = _context.TraineeToCourses
+			var traineeToCourses = db.TraineeToCourses
 				.Where(c => c.TraineeId == userId)
 				.Include(c => c.Course)
 				.Include(c => c.Trainee)

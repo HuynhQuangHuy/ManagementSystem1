@@ -9,10 +9,10 @@ namespace ManagementSystem.Controllers
 {
 	public class TrainerProfilesController : Controller
 	{
-		private ManageDBContext _context;
+		private ManageDBContext db;
 		public TrainerProfilesController()
 		{
-			_context = new ManageDBContext();
+			db = new ManageDBContext();
 		}
 
 		[HttpGet]
@@ -20,7 +20,7 @@ namespace ManagementSystem.Controllers
 		// GET: TrainerProfiles
 		public ActionResult Index(string searchTrainerProfile)
 		{
-			var trainerProfiles = _context.TrainerProfiles.Include(tp => tp.Trainer);
+			var trainerProfiles = db.TrainerProfiles.Include(tp => tp.Trainer);
 
 			if (!String.IsNullOrEmpty(searchTrainerProfile))
 			{
@@ -36,14 +36,14 @@ namespace ManagementSystem.Controllers
 		public ActionResult Create()
 		{
 			//Get Account Trainer
-			var roleInDb = (from r in _context.Roles where r.Name.Contains("Trainer") select r)
+			var roleInDb = (from r in db.Roles where r.Name.Contains("Trainer") select r)
 									 .FirstOrDefault();
 
-			var users = _context.Users.Where(x => x.Roles.Select(y => y.RoleId)
+			var users = db.Users.Where(x => x.Roles.Select(y => y.RoleId)
 														 .Contains(roleInDb.Id))
 														 .ToList();
 
-			var trainerProfiles = _context.TrainerProfiles.ToList();
+			var trainerProfiles = db.TrainerProfiles.ToList();
 
 			var trainerProfile = new TrainerProfile
 			{
@@ -59,13 +59,13 @@ namespace ManagementSystem.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return View("~/Views/CheckTrainerProfileConditions/CreateNullTrainerProfile.cshtml");
+				return View("~/Views/TrainerProfileConditions/CreateNullTrainerProfile.cshtml");
 			}
 
 			//Check if Trainer Profile existed or not
-			if (_context.TrainerProfiles.Any(c => c.TrainerId == trainerProfile.TrainerId))
+			if (db.TrainerProfiles.Any(c => c.TrainerId == trainerProfile.TrainerId))
 			{
-				return View("~/Views/CheckTrainerProfileConditions/CreateExistTrainerProfile.cshtml");
+				return View("~/Views/TrainerProfileConditions/CreateExistTrainerProfile.cshtml");
 			}
 			var getTrainerProfile = new TrainerProfile
 			{
@@ -77,23 +77,23 @@ namespace ManagementSystem.Controllers
 				Phone_Number = trainerProfile.Phone_Number
 			};
 
-			_context.TrainerProfiles.Add(getTrainerProfile);
-			_context.SaveChanges();
-			return View("~/Views/CheckTrainerProfileConditions/CreateTrainerProfileSuccess.cshtml");
+			db.TrainerProfiles.Add(getTrainerProfile);
+			db.SaveChanges();
+			return View("~/Views/TrainerProfileConditions/CreateTrainerProfileSuccess.cshtml");
 		}
 
 		[HttpGet]
 		[Authorize(Roles = "TrainingStaff")]
 		public ActionResult Delete(int id)
 		{
-			var trainerProfileInDb = _context.TrainerProfiles.SingleOrDefault(trdb => trdb.Id == id);
+			var trainerProfileInDb = db.TrainerProfiles.SingleOrDefault(trdb => trdb.Id == id);
 			if (trainerProfileInDb == null)
 			{
 				return HttpNotFound();
 			}
 
-			_context.TrainerProfiles.Remove(trainerProfileInDb);
-			_context.SaveChanges();
+			db.TrainerProfiles.Remove(trainerProfileInDb);
+			db.SaveChanges();
 			return RedirectToAction("Index");
 		}
 
@@ -101,7 +101,7 @@ namespace ManagementSystem.Controllers
 		[Authorize(Roles = "TrainingStaff, Trainer")]
 		public ActionResult Edit(int id)
 		{
-			var trainerProfileInDb = _context.TrainerProfiles.SingleOrDefault(trdb => trdb.Id == id);
+			var trainerProfileInDb = db.TrainerProfiles.SingleOrDefault(trdb => trdb.Id == id);
 
 			if (trainerProfileInDb == null)
 			{
@@ -120,7 +120,7 @@ namespace ManagementSystem.Controllers
 				return View();
 			}
 
-			var trainerProfileInDb = _context.TrainerProfiles.SingleOrDefault(trdb => trdb.Id == trainerProfile.Id);
+			var trainerProfileInDb = db.TrainerProfiles.SingleOrDefault(trdb => trdb.Id == trainerProfile.Id);
 
 			if (trainerProfileInDb == null)
 			{
@@ -131,9 +131,10 @@ namespace ManagementSystem.Controllers
 			trainerProfileInDb.Full_Name = trainerProfile.Full_Name;
 			trainerProfileInDb.External_Internal = trainerProfile.External_Internal;
 			trainerProfileInDb.Education = trainerProfile.Education;
+			trainerProfileInDb.Phone_Number = trainerProfile.Phone_Number;
 			trainerProfileInDb.Working_Place = trainerProfile.Working_Place;
 			trainerProfileInDb.Phone_Number = trainerProfile.Phone_Number;
-			_context.SaveChanges();
+			db.SaveChanges();
 
 			if (User.IsInRole("TrainingStaff"))
 			{
@@ -154,7 +155,7 @@ namespace ManagementSystem.Controllers
 		{
 			var userId = User.Identity.GetUserId();
 
-			var trainerProfiles = _context.TrainerProfiles
+			var trainerProfiles = db.TrainerProfiles
 				.Where(c => c.TrainerId == userId)
 				.Include(c => c.Trainer)
 				.ToList();

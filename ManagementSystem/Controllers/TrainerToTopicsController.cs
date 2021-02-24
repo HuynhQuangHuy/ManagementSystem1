@@ -10,11 +10,11 @@ namespace ManagementSystem.Controllers
 {
 	public class TrainerToTopicsController : Controller
 	{
-		private ManageDBContext _context;
+		private ManageDBContext db;
 
 		public TrainerToTopicsController()
 		{
-			_context = new ManageDBContext();
+			db = new ManageDBContext();
 		}
 
 		[HttpGet]
@@ -22,7 +22,7 @@ namespace ManagementSystem.Controllers
 		// GET: TrainerToTopics
 		public ActionResult Index(string searchTrainer)
 		{
-			var trainertotopicss = _context.TrainerToTopics
+			var trainertotopicss = db.TrainerToTopics
 								   .Include(tr => tr.Topic)
 								   .Include(tr => tr.Trainer);
 
@@ -41,15 +41,15 @@ namespace ManagementSystem.Controllers
 		public ActionResult Create()
 		{
 			//Get Account Trainer
-			var roleInDb = (from r in _context.Roles where r.Name.Contains("Trainer") select r)
+			var roleInDb = (from r in db.Roles where r.Name.Contains("Trainer") select r)
 									 .FirstOrDefault();
 
-			var users = _context.Users.Where(x => x.Roles.Select(y => y.RoleId)
+			var users = db.Users.Where(x => x.Roles.Select(y => y.RoleId)
 														 .Contains(roleInDb.Id))
 														 .ToList();
 
 			//Get Topic
-			var topics = _context.Topics.ToList();
+			var topics = db.Topics.ToList();
 
 			var viewModel = new TrainerToTopicViewModel
 			{
@@ -68,14 +68,14 @@ namespace ManagementSystem.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return View("~/Views/CheckTrainerToTopicConditions/AssignNullTrainerTopic.cshtml");
+				return View("~/Views/TrainerToTopicConditions/AssignNullTrainerTopic.cshtml");
 			}
 
 			//Check if Trainer Name or Topic Name existed or not
-			if (_context.TrainerToTopics.Any(c => c.TrainerId == trainerToTopic.TrainerId &&
+			if (db.TrainerToTopics.Any(c => c.TrainerId == trainerToTopic.TrainerId &&
 												  c.TopicId == trainerToTopic.TopicId))
 			{
-				return View("~/Views/CheckTrainerToTopicConditions/AssignExistTrainerTopic.cshtml");
+				return View("~/Views/TrainerToTopicConditions/AssignExistTrainerTopic.cshtml");
 			}
 
 			var newTrainerToTopic = new TrainerToTopic
@@ -84,68 +84,34 @@ namespace ManagementSystem.Controllers
 				TopicId = trainerToTopic.TopicId
 			};
 
-			_context.TrainerToTopics.Add(newTrainerToTopic);
-			_context.SaveChanges();
-			return View("~/Views/CheckTrainerToTopicConditions/AssignTrainerTopicSuccess.cshtml");
+			db.TrainerToTopics.Add(newTrainerToTopic);
+			db.SaveChanges();
+			return View("~/Views/TrainerToTopicConditions/AssignTrainerTopicSuccess.cshtml");
 		}
 
 		[HttpGet]
 		[Authorize(Roles = "TrainingStaff")]
 		public ActionResult Delete(int id)
 		{
-			var trainerInDb = _context.TrainerToTopics.SingleOrDefault(trdb => trdb.Id == id);
+			var trainerInDb = db.TrainerToTopics.SingleOrDefault(trdb => trdb.Id == id);
 			if (trainerInDb == null)
 			{
 				return HttpNotFound();
 			}
 
-			_context.TrainerToTopics.Remove(trainerInDb);
-			_context.SaveChanges();
+			db.TrainerToTopics.Remove(trainerInDb);
+			db.SaveChanges();
 			return RedirectToAction("Index");
 		}
 
-		/*[HttpGet]
-		public ActionResult Edit(int id)
-		{
-			var trainerInDb = _context.TrainerToTopics.SingleOrDefault(trdb => trdb.Id == id);
-
-			if (trainerInDb == null)
-			{
-				return HttpNotFound();
-			}
-
-			var viewModel = new TrainerToTopicViewModel
-			{
-				TrainerToTopic = trainerInDb,
-				Topics = _context.Topics.ToList(),
-			};
-
-			return View(viewModel);
-		}
-
-		[HttpPost]
-		public ActionResult Edit(TrainerToTopic trainerToTopic)
-		{
-			var trainerInDb = _context.TrainerToTopics.SingleOrDefault(trdb => trdb.Id == trainerToTopic.Id);
-
-			if (trainerInDb == null)
-			{
-				return HttpNotFound();
-			}
-
-			trainerInDb.TopicId = trainerToTopic.TopicId;
-
-			_context.SaveChanges();
-			return RedirectToAction("Index");
-		}*/
-
+		
 		[HttpGet]
 		[Authorize(Roles = "Trainer")]
 		public ActionResult Mine()
 		{
 			var userId = User.Identity.GetUserId();
 
-			var trainerToTopics = _context.TrainerToTopics
+			var trainerToTopics = db.TrainerToTopics
 				.Where(c => c.TrainerId == userId)
 				.Include(c => c.Topic)
 				.Include(c => c.Trainer)

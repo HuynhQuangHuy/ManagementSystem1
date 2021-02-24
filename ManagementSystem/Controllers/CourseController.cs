@@ -9,11 +9,11 @@ namespace ManagementSystem.Controllers
 {
 	public class CourseController : Controller
 	{
-		private ManageDBContext _context;
+		private ManageDBContext db;
 
 		public CourseController()
 		{
-			_context = new ManageDBContext();
+			db = new ManageDBContext();
 		}
 
 		// Courses/Index
@@ -21,7 +21,7 @@ namespace ManagementSystem.Controllers
 		[Authorize(Roles = "TrainingStaff")]
 		public ActionResult Index(string searchCourse)
 		{
-			var courses = _context.Courses.Include(co => co.Category);
+			var courses = db.Courses.Include(co => co.Category);
 
 			if (!String.IsNullOrEmpty(searchCourse))
 			{
@@ -40,7 +40,7 @@ namespace ManagementSystem.Controllers
 		{
 			var viewModel = new CourseCategoryViewModel
 			{
-				Categories = _context.Categories.ToList()
+				Categories = db.Categories.ToList()
 			};
 			return View(viewModel);
 		}
@@ -51,14 +51,14 @@ namespace ManagementSystem.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return View("~/Views/CheckCourseConditions/CreateNullCourse.cshtml");
+				return View("~/Views/CourseConditions/CreateNullCourse.cshtml");
 			}
 
 			//Check if Course Name existed or not
-			if (_context.Courses.Any(c => c.Name == course.Name &&
+			if (db.Courses.Any(c => c.Name == course.Name &&
 										  c.CategoryId == course.CategoryId))
 			{
-				return View("~/Views/CheckCourseConditions/CreateExistCourse.cshtml");
+				return View("~/Views/CourseConditions/CreateExistCourse.cshtml");
 			}
 
 			var newCourse = new Course
@@ -68,10 +68,10 @@ namespace ManagementSystem.Controllers
 				CategoryId = course.CategoryId,
 			};
 
-			_context.Courses.Add(newCourse);
-			_context.SaveChanges();
+			db.Courses.Add(newCourse);
+			db.SaveChanges();
 
-			return View("~/Views/CheckCourseConditions/CreateCourseSuccess.cshtml");
+			return View("~/Views/CourseConditions/CreateCourseSuccess.cshtml");
 		}
 
 		// Edit Course (Courses/Edit/Id/...)
@@ -79,7 +79,7 @@ namespace ManagementSystem.Controllers
 		[Authorize(Roles = "TrainingStaff")]
 		public ActionResult Edit(int id)
 		{
-			var courseInDb = _context.Courses.SingleOrDefault(co => co.Id == id);
+			var courseInDb = db.Courses.SingleOrDefault(co => co.Id == id);
 
 			if (courseInDb == null)
 			{
@@ -89,7 +89,7 @@ namespace ManagementSystem.Controllers
 			var viewModel = new CourseCategoryViewModel
 			{
 				Course = courseInDb,
-				Categories = _context.Categories.ToList()
+				Categories = db.Categories.ToList()
 			};
 
 			return View(viewModel);
@@ -101,10 +101,10 @@ namespace ManagementSystem.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return View("~/Views/CheckCourseConditions/EditNullCourse.cshtml");
+				return View("~/Views/CourseConditions/EditNullCourse.cshtml");
 			}
 
-			var courseInDb = _context.Courses.SingleOrDefault(co => co.Id == course.Id);
+			var courseInDb = db.Courses.SingleOrDefault(co => co.Id == course.Id);
 
 			if (courseInDb == null)
 			{
@@ -115,8 +115,8 @@ namespace ManagementSystem.Controllers
 			courseInDb.Descriptions = course.Descriptions;
 			courseInDb.CategoryId = course.CategoryId;
 
-			_context.SaveChanges();
-			return View("~/Views/CheckCourseConditions/EditCourseSuccess.cshtml");
+			db.SaveChanges();
+			return View("~/Views/CourseConditions/EditCourseSuccess.cshtml");
 		}
 
 		// Delete Course (Courses/Delete/Id/...)
@@ -124,15 +124,15 @@ namespace ManagementSystem.Controllers
 		[Authorize(Roles = "TrainingStaff")]
 		public ActionResult Delete(int id)
 		{
-			var courseInDb = _context.Courses.SingleOrDefault(co => co.Id == id);
+			var courseInDb = db.Courses.SingleOrDefault(co => co.Id == id);
 
 			if (courseInDb == null)
 			{
 				return HttpNotFound();
 			}
 
-			_context.Courses.Remove(courseInDb);
-			_context.SaveChanges();
+			db.Courses.Remove(courseInDb);
+			db.SaveChanges();
 			return RedirectToAction("Index");
 		}
 	}

@@ -172,7 +172,6 @@
     <Compile Include="Controllers\CourseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ManagesController.cs" />
     <Compile Include="Controllers\TopicsController.cs" />
     <Compile Include="Controllers\TraineeProfileController.cs" />
     <Compile Include="Controllers\TraineeToCoursesControllerController.cs" />
@@ -229,6 +228,10 @@
     <Compile Include="Migrations\202102230401145_DataAnnotations.cs" />
     <Compile Include="Migrations\202102230401145_DataAnnotations.Designer.cs">
       <DependentUpon>202102230401145_DataAnnotations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102230733063_updateTraineeProfileTable.cs" />
+    <Compile Include="Migrations\202102230733063_updateTraineeProfileTable.Designer.cs">
+      <DependentUpon>202102230733063_updateTraineeProfileTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -319,11 +322,11 @@
     <Content Include="Views\Course\Edit.cshtml" />
     <Content Include="Views\Course\Create.cshtml" />
     <Content Include="Views\Course\Index.cshtml" />
-    <Content Include="Views\CheckCourseConditions\CreateCourseSuccess.cshtml" />
-    <Content Include="Views\CheckCourseConditions\CreateExistCourse.cshtml" />
-    <Content Include="Views\CheckCourseConditions\CreateNullCourse.cshtml" />
-    <Content Include="Views\CheckCourseConditions\EditCourseSuccess.cshtml" />
-    <Content Include="Views\CheckCourseConditions\EditNullCourse.cshtml" />
+    <Content Include="Views\CourseConditions\CreateCourseSuccess.cshtml" />
+    <Content Include="Views\CourseConditions\CreateExistCourse.cshtml" />
+    <Content Include="Views\CourseConditions\CreateNullCourse.cshtml" />
+    <Content Include="Views\CourseConditions\EditCourseSuccess.cshtml" />
+    <Content Include="Views\CourseConditions\EditNullCourse.cshtml" />
     <Content Include="Views\Topics\Index.cshtml" />
     <Content Include="Views\Topics\Edit.cshtml" />
     <Content Include="Views\Topics\Create.cshtml" />
@@ -334,26 +337,26 @@
     <Content Include="Views\TraineeToCourses\Create.cshtml" />
     <Content Include="Views\TraineeToCourses\Index.cshtml" />
     <Content Include="Views\TraineeToCourses\Mine.cshtml" />
-    <Content Include="Views\CheckTopicConditions\CreateExistTopic.cshtml" />
-    <Content Include="Views\CheckTopicConditions\CreateNullTopic.cshtml" />
-    <Content Include="Views\CheckTopicConditions\CreateTopicSuccess.cshtml" />
-    <Content Include="Views\CheckTopicConditions\EditNullTopic.cshtml" />
-    <Content Include="Views\CheckTopicConditions\EditTopicSuccess.cshtml" />
+    <Content Include="Views\TopicConditions\CreateExistTopic.cshtml" />
+    <Content Include="Views\TopicConditions\CreateNullTopic.cshtml" />
+    <Content Include="Views\TopicConditions\CreateTopicSuccess.cshtml" />
+    <Content Include="Views\TopicConditions\EditNullTopic.cshtml" />
+    <Content Include="Views\TopicConditions\EditTopicSuccess.cshtml" />
     <Content Include="Views\CheckTraineeProfileConditions\CreateExistTraineeProfile.cshtml" />
     <Content Include="Views\CheckTraineeProfileConditions\CreateNullTraineeProfile.cshtml" />
     <Content Include="Views\CheckTraineeProfileConditions\CreateTraineeProfileSuccess.cshtml" />
     <Content Include="Views\CheckTraineeProfileConditions\EditNullTraineeProfile.cshtml" />
     <Content Include="Views\CheckTraineeProfileConditions\EditTraineeProfileSuccess.cshtml" />
-    <Content Include="Views\CheckTraineeToCourseConditions\AssignExistTraineeCourse.cshtml" />
-    <Content Include="Views\CheckTraineeToCourseConditions\AssignNullTraineeCourse.cshtml" />
-    <Content Include="Views\CheckTraineeToCourseConditions\AssignTraineeCourseSuccess.cshtml" />
-    <Content Include="Views\CheckTrainerProfileConditions\CreateExistTrainerProfile.cshtml" />
-    <Content Include="Views\CheckTrainerProfileConditions\CreateNullTrainerProfile.cshtml" />
-    <Content Include="Views\CheckTrainerProfileConditions\CreateTrainerProfileSuccess.cshtml" />
-    <Content Include="Views\CheckTrainerProfileConditions\EditTrainerProfileSuccess.cshtml" />
-    <Content Include="Views\CheckTrainerToTopicConditions\AssignExistTrainerTopic.cshtml" />
-    <Content Include="Views\CheckTrainerToTopicConditions\AssignNullTrainerTopic.cshtml" />
-    <Content Include="Views\CheckTrainerToTopicConditions\AssignTrainerTopicSuccess.cshtml" />
+    <Content Include="Views\TraineeToCourseConditions\AssignExistTraineeCourse.cshtml" />
+    <Content Include="Views\TraineeToCourseConditions\AssignNullTraineeCourse.cshtml" />
+    <Content Include="Views\TraineeToCourseConditions\AssignTraineeCourseSuccess.cshtml" />
+    <Content Include="Views\TrainerProfileConditions\CreateExistTrainerProfile.cshtml" />
+    <Content Include="Views\TrainerProfileConditions\CreateNullTrainerProfile.cshtml" />
+    <Content Include="Views\TrainerProfileConditions\CreateTrainerProfileSuccess.cshtml" />
+    <Content Include="Views\TrainerProfileConditions\EditTrainerProfileSuccess.cshtml" />
+    <Content Include="Views\TrainerToTopicConditions\AssignExistTrainerTopic.cshtml" />
+    <Content Include="Views\TrainerToTopicConditions\AssignNullTrainerTopic.cshtml" />
+    <Content Include="Views\TrainerToTopicConditions\AssignTrainerTopicSuccess.cshtml" />
     <Content Include="Views\TrainerProfiles\Create.cshtml" />
     <Content Include="Views\TrainerProfiles\Edit.cshtml" />
     <Content Include="Views\TrainerProfiles\Index.cshtml" />
@@ -416,6 +419,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202102230401145_DataAnnotations.resx">
       <DependentUpon>202102230401145_DataAnnotations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102230733063_updateTraineeProfileTable.resx">
+      <DependentUpon>202102230733063_updateTraineeProfileTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
