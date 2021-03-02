@@ -18,15 +18,15 @@
     {
 <td>@user.Username</td>
                     <td>@user.Email</td>
-                                        <td>@user.Role</td>
-                                                            <td>@Html.ActionLink("Delete this account", "Delete", new { id = user.UserId })</td>
+                                  <td>@user.Role</td>
+                                             <td>@Html.ActionLink("Delete this account", "Delete", new { id = user.UserId })</td>
+                                                          <td>@Html.ActionLink("Edit user name", "Edit", new { id = user.UserId })</td>
+                                                                        <td>@Html.ActionLink("Reset Password", "ChangePass", new { id = user.UserId })</td> } @*	.
+                                                                                <td>@user.Username</td>
+                                                                                <td>@user.Email</td>
+                                                                                <td>@user.Role</td>
+                                                                                <td>@Html.ActionLink("Delete this account", "Delete", new { id = user.UserId })</td>
                                                                                 <td>@Html.ActionLink("Edit user name", "Edit", new { id = user.UserId })</td>
-                                                                                                    <td>@Html.ActionLink("Reset Password", "ChangePass", new { id = user.UserId })</td> } @*	.
-                                                                                                        <td>@user.Username</td>
-                                                                                                        <td>@user.Email</td>
-                                                                                                        <td>@user.Role</td>
-                                                                                                        <td>@Html.ActionLink("Delete this account", "Delete", new { id = user.UserId })</td>
-                                                                                                        <td>@Html.ActionLink("Edit user name", "Edit", new { id = user.UserId })</td>
-                                                                                                        .*@ @*	<td>@Html.ActionLink("Change Password", "ChangePass", new { id = user.UserId})</td>*@
+                                                                                .*@ @*	<td>@Html.ActionLink("Change Password", "ChangePass", new { id = user.UserId})</td>*@
 </tr>}
 </table>

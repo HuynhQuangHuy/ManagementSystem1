@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using ManagementSystem.Models;
 using ManagementSystem.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace ManagementSystem.Controllers
 {
@@ -18,7 +19,7 @@ namespace ManagementSystem.Controllers
 
 		// Courses/Index
 		[HttpGet]
-		[Authorize(Roles = "TrainingStaff")]
+		[Authorize(Roles = "TrainingStaff, Trainee")]
 		public ActionResult Index(string searchCourse)
 		{
 			var courses = db.Courses.Include(co => co.Category);
@@ -130,10 +131,11 @@ namespace ManagementSystem.Controllers
 			{
 				return HttpNotFound();
 			}
-
+			 
 			db.Courses.Remove(courseInDb);
 			db.SaveChanges();
 			return RedirectToAction("Index");
 		}
+	
 	}
 }

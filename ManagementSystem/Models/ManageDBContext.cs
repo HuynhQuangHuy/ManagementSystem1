@@ -25,7 +25,8 @@ namespace ManagementSystem.Models
         public DbSet<TraineeToCourse> TraineeToCourses { get; set; }
         public DbSet<TrainerProfile> TrainerProfiles { get; set; }
         public DbSet<TrainerToTopic> TrainerToTopics { get; set; }
-        
+
+        public DbSet<TrainerToCourse> TrainerToCourses { get; set; }
         public DbSet<Category> Categories { get; set; }
     }
     

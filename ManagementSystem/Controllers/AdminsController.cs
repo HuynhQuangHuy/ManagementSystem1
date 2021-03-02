@@ -24,7 +24,7 @@ namespace ManagementSystem.Controllers
 		[Authorize(Roles = "Admin")]
 		public ActionResult Profiless()
 		{
-			//Láy giá trị từ bẳng AspNetUser và liên kết với bảng AspnetRole thông qua bảng AspNetUserRole
+	
 			var UserInfor = (from user in _context.Users
 							 select new
 							
@@ -126,8 +126,8 @@ namespace ManagementSystem.Controllers
 			}
 
    
-			var userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
-			userId = AccountInDB.Id;
+			//var userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+			var userId = AccountInDB.Id;
 			if (userId != null) 
 			{
 

@@ -1,0 +1,22 @@
+﻿@model IEnumerable<ManagementSystem.Models.TrainerToCourse>
+@{ ViewBag.Title = "Mine"; }
+
+<h2>My Courses</h2>
+
+
+<table class="table table-striped">
+    <tr>
+        <th>Trainer Id</th>
+        <th>Trainer Email</th>
+        <th>Trainer UserName</th>
+        <th>Course Name</th>
+    </tr>
+    @foreach (var trainer in Model)
+    {
+<tr>
+    <th>@trainer.Id</th>
+    <th>@trainer.Trainer.Email</th>
+    <th>@trainer.Trainer.UserName</th>
+    <th>@trainer.Course.Name</th>
+</tr>}
+</table>

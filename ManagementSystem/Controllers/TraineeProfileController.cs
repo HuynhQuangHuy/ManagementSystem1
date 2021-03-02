@@ -149,7 +149,7 @@ namespace ManagementSystem.Controllers
 				.Where(c => c.TraineeId == userId)
 				.Include(c => c.Trainee)
 				.ToList();
-
+			    
 			return View(traineeProfiles);
 		}
 	}

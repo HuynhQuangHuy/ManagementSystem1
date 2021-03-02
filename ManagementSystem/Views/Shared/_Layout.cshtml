@@ -24,42 +24,45 @@
 
                     @if (Request.IsAuthenticated && User.IsInRole("Admin"))
                     {
-        <li>@Html.ActionLink("Accounts", "Profiless", "Admins")</li>
-                        <li>@Html.ActionLink("New User", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>}
+                <li>@Html.ActionLink("Accounts", "Profiless", "Admins")</li>
+                                <li>@Html.ActionLink("New User", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>}
 
                     @if (Request.IsAuthenticated && User.IsInRole("TrainingStaff"))
                     {
-                        //fix for TrainingStaff
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="False">Category<span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
 
-                <li>@Html.ActionLink("Course", "Index", "Course")</li>
-                <li>@Html.ActionLink("Topic", "Index", "Topics")</li>
-            </ul>
-        </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="False">Category<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>@Html.ActionLink("Category", "Index", "Categories")</li>
+                        <li>@Html.ActionLink("Course", "Index", "Course")</li>
+                        <li>@Html.ActionLink("Topic", "Index", "Topics")</li>
+                    </ul>
+                </li>
 
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="False">Manage User<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>@Html.ActionLink("Accounts", "Index", "TrainingStaffs")</li>
-                                <li>@Html.ActionLink("Create New User", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-                                <li>@Html.ActionLink("Trainee", "Index", "TraineeToCourses")</li>
-                                <li>@Html.ActionLink("Trainer", "Index", "TrainerToTopics")</li>
-                                <li>@Html.ActionLink("Trainee Profile", "Index", "TraineeProfile")</li>
-                                <li>@Html.ActionLink("Trainer Profile", "Index", "TrainerProfiles")</li>
-                            </ul>
-                        </li>}
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="False">Manage User<span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>@Html.ActionLink("Accounts", "Index", "TrainingStaffs")</li>
+                                        <li>@Html.ActionLink("Create New User", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                                        <li>@Html.ActionLink("Trainee Course", "Index", "TraineeToCourses")</li>
+                                        <li>@Html.ActionLink("Trainer Topic", "Index", "TrainerToTopics")</li>
+                                        <li>@Html.ActionLink("Trainer Course", "Index", "TrainerToCourses")</li>
+                                        <li>@Html.ActionLink("Trainee Profile", "Index", "TraineeProfile")</li>
+                                        <li>@Html.ActionLink("Trainer Profile", "Index", "TrainerProfiles")</li>
+                                    </ul>
+                                </li>}
 
                     @if (Request.IsAuthenticated && User.IsInRole("Trainee"))
                     {
-        <li>@Html.ActionLink("My Course", "Mine", "TraineeToCourses")</li>
-                        <li>@Html.ActionLink("My Profile", "Mine", "TraineeProfile")</li>}
+                <li>@Html.ActionLink("My Course", "Mine", "TraineeToCourses")</li>
+                                <li>@Html.ActionLink("All Course", "Index", "Course")</li>
+                                                <li>@Html.ActionLink("My Profile", "Mine", "TraineeProfile")</li>}
 
                     @if (Request.IsAuthenticated && User.IsInRole("Trainer"))
                     {
-        <li>@Html.ActionLink("My Topic", "Mine", "TrainerToTopics")</li>
-                        <li>@Html.ActionLink("My Profile", "Mine", "TrainerProfiles")</li>}
+                <li>@Html.ActionLink("My Topic", "Mine", "TrainerToTopics")</li>
+                                <li>@Html.ActionLink("My Course", "Mine", "TrainerToCourses")</li>
+                                                <li>@Html.ActionLink("My Profile", "Mine", "TrainerProfiles")</li>}
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

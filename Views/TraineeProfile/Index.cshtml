@@ -1,0 +1,62 @@
+﻿@model IEnumerable<ManagementSystem.Models.TraineeProfile>
+@{ ViewBag.Title = "Index"; }
+
+<h2>Trainee Profile</h2>
+
+@using (Html.BeginForm("Index", "TraineeProfile", FormMethod.Get))
+{
+    <p>
+        <input type="search" class="form-control" placeholder="Enter Trainee Email or UserName"
+               name="searchTraineeProfile" style="width:241px; height:33px; display:inline-block;" />
+
+        <input type="submit" value="Search" class="btn btn-info" />
+
+        <a class="btn btn-info" href="~/TraineeProfile/Index" role="button">
+            View all Trainee Profiles
+        </a>
+    </p>}
+
+@if (Request.IsAuthenticated && User.IsInRole("TrainingStaff"))
+{
+    <div>
+        <a class="btn btn-info" href="~/TraineeProfile/Create" style="margin-bottom:10px;" role="button">
+            Create Trainee Profile
+        </a>
+    </div>}
+
+<table class="table table-striped">
+    <tr>
+        <th>Id</th>
+        <th>Trainee Email</th>
+        <th>Trainee UserName</th>
+        <th>Trainee Full Name</th>
+        <th>Education</th>
+        <th>Programming Language</th>
+        <th>Experience Details</th>
+        <th>Location</th>
+        @if (Request.IsAuthenticated && User.IsInRole("TrainingStaff"))
+        {
+            <th>Edit</th>
+            <th>Delete</th>
+}
+
+    </tr>
+    @foreach (var trainee in Model)
+    {
+        <tr>
+            <th>@trainee.Id</th>
+            <th>@trainee.Trainee.Email</th>
+            <th>@trainee.Trainee.UserName</th>
+            <th>@trainee.Full_Name</th>
+            <th>@trainee.Education</th>
+            <th>@trainee.Programming_Language</th>
+            <th>@trainee.Experience_Details</th>
+            <th>@trainee.Location</th>
+            @if (Request.IsAuthenticated && User.IsInRole("TrainingStaff"))
+            {
+                <th>@Html.ActionLink("Edit", "Edit", new { id = trainee.Id })</th>
+                <th>@Html.ActionLink("Delete", "Delete", new { id = trainee.Id })</th>
+}
+        </tr>
+}
+</table>
